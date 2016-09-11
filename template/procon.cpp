@@ -5,10 +5,13 @@
 #include <queue>
 #include <bitset>
 #include <set>
-#include <queue>
+#include <map>
+#include <stack>
 
 #define rep(i,n) for(int i=0;i<n;i++)
 #define REP(i,b,n) for(int i=b;i<n;i++)
+#define SORT(c) sort((c).begin(),(c).end())
+#define DESCSORT(c) sort(c.begin(), c.end(), greater<int>())
 
 const float PI = 3.1415926;
 static const int INFTY = (1<<30);
