@@ -23,7 +23,7 @@ int B[102][102];
 int M[102][102];
 int w, h, xs, ys, xg, yg, n, res;
  
-void bfs(int x, int y, int c) {
+void dfs(int x, int y, int c) {
   if(x <= 0 || y <= 0 || x > w+1 || y > h+1)
     return;
   if(B[x][y] != c)
@@ -37,10 +37,10 @@ void bfs(int x, int y, int c) {
     res = 1;
     return; 
   }
-  bfs(x+1, y, c);
-  bfs(x, y+1, c);
-  bfs(x-1, y, c);
-  bfs(x, y-1, c);
+  dfs(x+1, y, c);
+  dfs(x, y+1, c);
+  dfs(x-1, y, c);
+  dfs(x, y-1, c);
 }
 
 int main() {
@@ -78,7 +78,7 @@ int main() {
       }        
     }
     if(B[xs][ys] != 0)
-      bfs(xs, ys, B[xs][ys]);
+      dfs(xs, ys, B[xs][ys]);
     if(res)
       cout << "OK" << endl;
     else
