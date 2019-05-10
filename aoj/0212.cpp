@@ -27,58 +27,43 @@ typedef long long ll;
 typedef long double ld;
 
 int c, n, m, s, d;
-int C[101][101];
+int C[101][101], D[101][101];
+int DP[101][16];
 
-  int D[MAX]; // d[v]始点startからvまでの最短コスト
-  int P[MAX]; // P[v]頂点vの親を記憶
-
-void dijkstra(int start) {
-  int minv;
-  int color[MAX];
-
-  for(int i=0; i < n; i++) {
-    D[i] = INFTY;
-    color[i] = WHITE;
+// co=割引券, cost=現在の値段
+void solve(int st, int co, int cost) {
+  if (st == d-1) {
+    return;
   }
-
-  D[start] = 0;
-  P[start] = -1;
-
-  while(1) {
-    minv = INFTY;
-    int u = -1;
-    rep(i, n) {
-      if (minv > D[i] && color[i] != BLACK) {
-        u = i;
-        minv = D[i];
-      }
+  // 次の町探し
+  rep(i, n) {
+    if (i == st || C[st][i] == INFTY) {
+      continue;
     }
-
-    if( u == -1 ) break;
-
-    color[u] = BLACK;
-
-    rep(v, n) {
-      if(color[v] != BLACK && C[u][v] != INFTY) {
-        if(D[v] > D[u] + C[u][v]) {
-          D[v] = D[u] + C[u][v];
-          color[v] = GRAY;
-          P[v] = u;
-        }
-        if(D[v] > D[u] + C[u][v]/2) {
-          D[v] = D[u] + C[u][v];
-          color[v] = GRAY;
-          P[v] = u;
-        }
-      }
+    int tmp = cost + C[st][i];
+    int tmp2 = cost + C[st][i]/2;
+    if (DP[i][co] > tmp) {
+      DP[i][co] = tmp;
+      solve(i, co, tmp);
+    }
+    if (co < c && DP[i][co+1] > tmp2) {
+      DP[i][co+1] = tmp2;
+      solve(i, co+1, tmp2);
     }
   }
 }
 
+
 int main() {
   while (cin >> c >> n >> m >> s >> d, c) {
-    rep(i, n) rep(j, n) {
-      C[i][j] = INFTY;
+    rep(i, n) {
+      rep(j, n) {
+        C[i][j] = INFTY;
+        D[i][j] = INFTY;
+      }
+      rep (q, c+1) {
+        DP[i][q] = INFTY;
+      }
     }
     rep(i, m) {
       int a,b,f;
@@ -86,9 +71,12 @@ int main() {
       C[a-1][b-1] = f;
       C[b-1][a-1] = f;
     }
-    
-    dijkstra(s-1);
-    cout << D[d-1] << endl;
+    solve(s-1, 0, 0);
+    int res = INFTY;
+    rep(i, c+1) {
+      res = min(res, DP[d-1][i]);
+    }
+    cout << res << endl;
   }
   return 0;
 }
